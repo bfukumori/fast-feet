@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  cpf      String @unique
+  password String
+  role     Role   @default(DELIVERY_MAN)
+
+  packages Package[]
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  DELIVERY_MAN
+}
+
+model Recipient {
+  id         String  @id @default(uuid())
+  name       String
+  street     String
+  number     String
+  complement String?
+  city       String
+  state      String
+  zipCode    String  @map("zip_code")
+
+  packages Package[]
+
+  @@map("recipients")
+}
+
+model Package {
+  id                String        @id @default(uuid())
+  recipientId       String        @map("recipient_id")
+  deliveryManId     String?       @map("delivery_man_id")
+  status            PackageStatus @default(PENDING)
+  description       String
+  pickedDate        DateTime?     @map("picked_date")
+  deliveredDate     DateTime?     @map("delivered_date")
+  deliveredPhotoUrl String?       @map("delivered_photo_url")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  User                      User?                       @relation(fields: [deliveryManId], references: [id])
+  Recipient                 Recipient                   @relation(fields: [recipientId], references: [id])
+  packageStatusNotification PackageStatusNotification[]
+
+  @@map("packages")
+}
+
+enum PackageStatus {
+  PENDING
+  PICKED_UP
+  DELIVERED
+}
+
+model PackageStatusNotification {
+  id         String        @id @default(uuid())
+  packageId  String        @map("package_id")
+  status     PackageStatus
+  notifiedAt DateTime      @default(now()) @map("notified_at")
+
+  Package Package @relation(fields: [packageId], references: [id])
+
+  @@map("package_status_notifications")
+}
