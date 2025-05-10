@@ -1,5 +1,9 @@
 onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@nestjs/core'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@scarf/scarf'
   - '@swc/core'
   - esbuild
+  - prisma
