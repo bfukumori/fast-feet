@@ -1,5 +1,5 @@
 import { fakerPT_BR as faker } from "@faker-js/faker";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "generated/prisma";
 
 const prisma = new PrismaClient();
 
@@ -18,7 +18,7 @@ async function main() {
 				name: faker.person.fullName(),
 				cpf: "12345678900",
 				password:
-					"$2a$10$aVn/n8JQ0A9nFqmgOCUO8.k16fYv8o14PK1qYgJUZmf9Ol78PBsiy",
+					"$2y$10$dNPhHTsoLUHybaFCmb6oC.Ffi0oWFR1dG28LIFlqVNu8O5s/RiYJa",
 				role: "ADMIN",
 			},
 		}),
@@ -31,7 +31,7 @@ async function main() {
 				name: faker.person.fullName(),
 				cpf: "00987654321",
 				password:
-					"$2a$10$aVn/n8JQ0A9nFqmgOCUO8.k16fYv8o14PK1qYgJUZmf9Ol78PBsiy",
+					"$2y$10$dNPhHTsoLUHybaFCmb6oC.Ffi0oWFR1dG28LIFlqVNu8O5s/RiYJa",
 			},
 		}),
 		prisma.recipient.upsert({
