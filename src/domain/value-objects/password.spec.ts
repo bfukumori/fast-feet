@@ -12,10 +12,10 @@ const INVALID_SPECIAL_CHAR_PASSWORD = "AAa12345";
 
 describe("[Value Object] Password", () => {
 	test("create a new password", async () => {
-		const password = Password.createFromPlain(VALID_PASSWORD);
+		const plainPassword = Password.createFromPlain(VALID_PASSWORD);
+		const password = Password.createFromHashed(plainPassword);
 
-		expect(password).toBeTruthy();
-		expect(password).toBe(VALID_PASSWORD);
+		expect(plainPassword).toBe(VALID_PASSWORD);
 		expect(password.toString()).toBe(VALID_PASSWORD);
 	});
 

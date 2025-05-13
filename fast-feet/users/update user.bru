@@ -1,0 +1,23 @@
+meta {
+  name: update user
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/users/:userId/edit
+  body: json
+  auth: inherit
+}
+
+params:path {
+  userId: 6b70148f-a111-44a4-bca3-7bc19ee41be3
+}
+
+body:json {
+  {
+    "name": "Bruno Fukumori",
+    "password": "#Aa12345",
+    "role": "ADMIN"
+  }
+}

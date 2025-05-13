@@ -1,9 +1,9 @@
 import { User } from "@src/domain/entities/user";
 import { User as PrismaUser } from "generated/prisma";
 
-export function toPersistence(user: User) {
+export function toPersistence(user: User): PrismaUser {
 	return {
-		id: user.id,
+		id: user.id.value,
 		name: user.name,
 		cpf: user.cpf.value,
 		password: user.password.value,
@@ -12,7 +12,7 @@ export function toPersistence(user: User) {
 }
 
 export function toDomain(user: PrismaUser): User {
-	return User.rehydrate({
+	return User.create({
 		id: user.id,
 		cpf: user.cpf,
 		name: user.name,

@@ -6,7 +6,7 @@ export const createUserSchema = z.object({
 	name: z.string(),
 	cpf: z.string().regex(/^\d{11}$/, { message: "Cpf must be 11 digits" }),
 	password: z.string(),
-	role: z.enum([Role.ADMIN, Role.DELIVERY_MAN]),
+	role: z.enum([Role.ADMIN, Role.DELIVERY_MAN]).default(Role.DELIVERY_MAN),
 });
 
 export class CreateUserDto extends createZodDto(createUserSchema) {}

@@ -6,7 +6,7 @@ import { CreateUserUseCase } from "@src/application/use-cases/create-user";
 export class CreateUserController {
 	constructor(private readonly createUserUseCase: CreateUserUseCase) {}
 
-	@Post("create")
+	@Post("new")
 	async create(@Body() createUserDto: CreateUserDto): Promise<void> {
 		await this.createUserUseCase.execute(createUserDto);
 	}

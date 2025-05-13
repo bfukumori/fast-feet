@@ -1,0 +1,24 @@
+meta {
+  name: get user by cpf
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/users?cpf=11649425066
+  body: none
+  auth: inherit
+}
+
+params:query {
+  cpf: 11649425066
+}
+
+body:json {
+  {
+    "name": "Bruno Fukumori",
+    "cpf": "368619468a69",
+    "password": "#Aa12345",
+    "role": "DELIVERY_MAN"
+  }
+}

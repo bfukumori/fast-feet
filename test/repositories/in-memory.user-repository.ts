@@ -10,7 +10,7 @@ export class InMemoryUserRepository implements UserRepository {
 	}
 
 	async getUserById(id: string) {
-		const user = this.users.find((user) => user.id === id);
+		const user = this.users.find((user) => user.id.value === id);
 
 		if (!user) return null;
 
@@ -32,7 +32,7 @@ export class InMemoryUserRepository implements UserRepository {
 	}
 
 	async deleteUser(id: string): Promise<void> {
-		const userIndex = this.users.findIndex((user) => user.id === id);
+		const userIndex = this.users.findIndex((user) => user.id.value === id);
 
 		this.users.splice(userIndex, 1);
 	}
