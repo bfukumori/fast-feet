@@ -44,10 +44,11 @@ model Package {
   id                String        @id @default(uuid())
   recipientId       String        @map("recipient_id")
   deliveryManId     String?       @map("delivery_man_id")
-  status            PackageStatus @default(PENDING)
+  status            PackageStatus @default(AWAITING_PICKUP)
   description       String
   pickedDate        DateTime?     @map("picked_date")
   deliveredDate     DateTime?     @map("delivered_date")
+  returnedDate      DateTime?     @map("returned_date")
   deliveredPhotoUrl String?       @map("delivered_photo_url")
   createdAt         DateTime      @default(now()) @map("created_at")
   updatedAt         DateTime      @updatedAt @map("updated_at")
@@ -60,9 +61,10 @@ model Package {
 }
 
 enum PackageStatus {
-  PENDING
+  AWAITING_PICKUP
   PICKED_UP
   DELIVERED
+  RETURNED
 }
 
 model PackageStatusNotification {

@@ -1,7 +1,7 @@
-import { UserDto } from "@src/application/dtos/user-dto";
+import { GetUserDto } from "@src/application/dtos/get-user.dto";
 import { User } from "@src/domain/entities/user";
 
-export function toResponse(user: User): UserDto {
+export function toResponse(user: User): GetUserDto {
 	return {
 		id: user.id.value,
 		name: user.name,

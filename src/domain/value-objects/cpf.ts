@@ -2,8 +2,8 @@ import { DomainError } from "@src/shared/errors/domain-error";
 
 export class Cpf {
 	private readonly _value: string;
-	private static readonly LENGTH = 11;
-	private static readonly REGEX = {
+	private static readonly _LENGTH = 11;
+	private static readonly _REGEX = {
 		notDigits: /[^\d]/g,
 		allDigitsEqual: /^(\d)\1+$/,
 		format: /(\d{3})(\d{3})(\d{3})(\d{2})/,
@@ -32,7 +32,7 @@ export class Cpf {
 	}
 
 	format(): string {
-		return this._value.replace(Cpf.REGEX.format, "$1.$2.$3-$4");
+		return this._value.replace(Cpf._REGEX.format, "$1.$2.$3-$4");
 	}
 
 	static create(value: string): Cpf {
@@ -44,15 +44,15 @@ export class Cpf {
 	}
 
 	private static sanitize(value: string): string {
-		return value.replace(Cpf.REGEX.notDigits, "");
+		return value.replace(Cpf._REGEX.notDigits, "");
 	}
 
 	private static validate(cpf: string) {
-		if (cpf.length !== Cpf.LENGTH) {
+		if (cpf.length !== Cpf._LENGTH) {
 			throw new DomainError(Cpf.ERROR_MESSAGE.invalidLength, Cpf.name);
 		}
 
-		if (Cpf.REGEX.allDigitsEqual.test(cpf)) {
+		if (Cpf._REGEX.allDigitsEqual.test(cpf)) {
 			throw new DomainError(Cpf.ERROR_MESSAGE.invalidAllDigitsEqual, Cpf.name);
 		}
 

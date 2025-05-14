@@ -27,7 +27,7 @@ export class UpdateUserUseCase {
 			existingUser.updateRole(role);
 		}
 
-		const user = User.create({
+		const user = User.restore({
 			id: existingUser.id.value,
 			name: existingUser.name,
 			cpf: existingUser.cpf.value,

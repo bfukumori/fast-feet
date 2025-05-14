@@ -12,7 +12,7 @@ export function toPersistence(user: User): PrismaUser {
 }
 
 export function toDomain(user: PrismaUser): User {
-	return User.create({
+	return User.restore({
 		id: user.id,
 		cpf: user.cpf,
 		name: user.name,

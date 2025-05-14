@@ -1,6 +1,5 @@
 import { HttpStatus } from "@nestjs/common";
 import { User } from "@src/domain/entities/user";
-import { toPersistence } from "@src/infrastructure/mappers/prisma-user-mapper";
 import { ApplicationError } from "@src/shared/errors/application-error";
 import { DomainError } from "@src/shared/errors/domain-error";
 import { makeUser } from "@test/factories/make-user-factory";
@@ -9,39 +8,42 @@ import { Role } from "generated/prisma";
 import { UpdateUserUseCase } from "./update-user";
 
 let inMemoryUserRepository: InMemoryUserRepository;
-let user: User;
 let sut: UpdateUserUseCase;
 
 describe("Update user use case", () => {
 	beforeEach(() => {
 		inMemoryUserRepository = new InMemoryUserRepository();
 		sut = new UpdateUserUseCase(inMemoryUserRepository);
-		user = makeUser();
 	});
 
 	it("should be able to update a new user", async () => {
+		const user = makeUser();
 		inMemoryUserRepository.users.push(user);
 
 		user.updateName("new name");
 		user.updateRole(Role.ADMIN);
 
-		await sut.execute(toPersistence(user), user.id.value);
+		await sut.execute(user, user.id.value);
 
 		expect(inMemoryUserRepository.users[0]).toStrictEqual(
-			makeUser({
+			User.restore({
 				id: user.id.value,
 				name: "new name",
+				cpf: user.cpf.value,
+				password: user.password.value,
 				role: Role.ADMIN,
 			}),
 		);
 	});
 
 	it("should not be able to update a nonexistent user", async () => {
+		const invalidId = "invalid id";
+
 		await expect(async () => {
-			await sut.execute(toPersistence(user), user.id.value);
+			await sut.execute({ name: "updated name" }, invalidId);
 		}).rejects.toThrow(
 			new ApplicationError(
-				`User with ID: "${user.id.value}" not found.`,
+				`User with ID: "${invalidId}" not found.`,
 				UpdateUserUseCase.name,
 				HttpStatus.NOT_FOUND,
 			),
@@ -49,8 +51,11 @@ describe("Update user use case", () => {
 	});
 
 	it("should not be able to update a user with invalid role", async () => {
+		const user = makeUser();
+		inMemoryUserRepository.users.push(user);
+
 		await expect(async () => {
-			makeUser({ role: "invalid-role" as Role });
+			user.updateRole("invalid-role" as Role);
 		}).rejects.toThrow(
 			new DomainError("Invalid role", User.name, HttpStatus.BAD_REQUEST),
 		);

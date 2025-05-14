@@ -6,7 +6,7 @@ export const userSchema = z.object({
 	id: z.string().uuid(),
 	name: z.string(),
 	cpf: z.string(),
-	role: z.enum([Role.ADMIN, Role.DELIVERY_MAN]),
+	role: z.nativeEnum(Role),
 });
 
-export class UserDto extends createZodDto(userSchema) {}
+export class GetUserDto extends createZodDto(userSchema) {}

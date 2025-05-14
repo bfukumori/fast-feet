@@ -11,12 +11,12 @@ async function main() {
 	await Promise.all([
 		prisma.user.upsert({
 			where: {
-				cpf: "12345678900",
+				cpf: "68720915098",
 			},
 			update: {},
 			create: {
 				name: faker.person.fullName(),
-				cpf: "12345678900",
+				cpf: "68720915098",
 				password:
 					"$2y$10$dNPhHTsoLUHybaFCmb6oC.Ffi0oWFR1dG28LIFlqVNu8O5s/RiYJa",
 				role: "ADMIN",
@@ -24,12 +24,12 @@ async function main() {
 		}),
 		prisma.user.upsert({
 			where: {
-				cpf: "00987654321",
+				cpf: "35995158082",
 			},
 			update: {},
 			create: {
 				name: faker.person.fullName(),
-				cpf: "00987654321",
+				cpf: "35995158082",
 				password:
 					"$2y$10$dNPhHTsoLUHybaFCmb6oC.Ffi0oWFR1dG28LIFlqVNu8O5s/RiYJa",
 			},
@@ -55,7 +55,7 @@ async function main() {
 						packageStatusNotification: {
 							create: {
 								id: packageStatusNotificationId,
-								status: "PENDING",
+								status: "AWAITING_PICKUP",
 							},
 						},
 					},
