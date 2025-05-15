@@ -13,7 +13,7 @@ export class CreateUserUseCase {
 		private readonly hasher: Hasher,
 	) {}
 
-	async execute({ cpf, name, password, role }: CreateUserInput) {
+	async execute({ cpf, name, password, role, id }: CreateUserInput) {
 		const userWithSameCpf = await this.userRepository.getUserByCpf(cpf);
 
 		if (userWithSameCpf) {
@@ -28,6 +28,7 @@ export class CreateUserUseCase {
 		const hashedPassword = await this.hasher.hash(rawPassword);
 
 		const user = User.create({
+			id,
 			name,
 			cpf,
 			password: hashedPassword,

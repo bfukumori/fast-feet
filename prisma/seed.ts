@@ -1,5 +1,5 @@
 import { fakerPT_BR as faker } from "@faker-js/faker";
-import { PrismaClient } from "generated/prisma";
+import { PackageStatus, PrismaClient, Role } from "generated/prisma";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +19,7 @@ async function main() {
 				cpf: "68720915098",
 				password:
 					"$2y$10$dNPhHTsoLUHybaFCmb6oC.Ffi0oWFR1dG28LIFlqVNu8O5s/RiYJa",
-				role: "ADMIN",
+				role: Role.ADMIN,
 			},
 		}),
 		prisma.user.upsert({
@@ -55,7 +55,7 @@ async function main() {
 						packageStatusNotification: {
 							create: {
 								id: packageStatusNotificationId,
-								status: "AWAITING_PICKUP",
+								status: PackageStatus.AWAITING_PICKUP,
 							},
 						},
 					},

@@ -2,7 +2,7 @@ import { HttpStatus } from "@nestjs/common";
 import { User } from "@src/domain/entities/user";
 import { ApplicationError } from "@src/shared/errors/application-error";
 import { makeUser } from "@test/factories/make-user-factory";
-import { InMemoryUserRepository } from "@test/repositories/in-memory.user-repository";
+import { InMemoryUserRepository } from "@test/repositories/in-memory-user-repository";
 import { GetUserByIdUseCase } from "./get-user-by-id";
 
 let inMemoryUserRepository: InMemoryUserRepository;

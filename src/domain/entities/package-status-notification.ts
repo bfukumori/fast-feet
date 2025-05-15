@@ -48,18 +48,4 @@ export class PackageStatusNotification {
 			status,
 		});
 	}
-
-	static restore({
-		packageId,
-		status,
-		notifiedAt,
-		id,
-	}: RestorePackageStatusNotificationProps): PackageStatusNotification {
-		return new PackageStatusNotification({
-			id: Id.create(id),
-			packageId,
-			status,
-			notifiedAt,
-		});
-	}
 }

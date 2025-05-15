@@ -2,7 +2,7 @@ import { DomainError } from "@src/shared/errors/domain-error";
 import { Id } from "../value-objects/id";
 
 type InternalRecipientProps = {
-	id?: Id;
+	id: Id;
 	name: string;
 	street: string;
 	number: string;
@@ -12,10 +12,8 @@ type InternalRecipientProps = {
 	zipCode: string;
 };
 
-type RecipientProps = Omit<InternalRecipientProps, "id">;
-
-export type RestoreRecipientProps = Omit<InternalRecipientProps, "id"> & {
-	id: string;
+export type RecipientProps = Omit<InternalRecipientProps, "id"> & {
+	id?: string;
 };
 
 export class Recipient {
@@ -34,7 +32,7 @@ export class Recipient {
 	public readonly name: string;
 	public readonly street: string;
 	public readonly number: string;
-	public readonly complement?: string | null;
+	public complement?: string | null;
 	public readonly city: string;
 	public readonly state: string;
 	public readonly zipCode: string;
@@ -49,7 +47,7 @@ export class Recipient {
 		state,
 		zipCode,
 	}: InternalRecipientProps) {
-		this.id = id ?? Id.create();
+		this.id = id;
 		this.name = name;
 		this.street = street;
 		this.number = number;
@@ -59,7 +57,12 @@ export class Recipient {
 		this.zipCode = zipCode;
 	}
 
+	updateComplement(complement: string): void {
+		this.complement = complement;
+	}
+
 	static create({
+		id,
 		name,
 		street,
 		number,
@@ -71,27 +74,6 @@ export class Recipient {
 		Recipient.validateState(state);
 		Recipient.validateZipcode(zipCode);
 
-		return new Recipient({
-			name,
-			street,
-			number,
-			complement,
-			city,
-			state,
-			zipCode,
-		});
-	}
-
-	static restore({
-		name,
-		street,
-		number,
-		complement,
-		city,
-		state,
-		zipCode,
-		id,
-	}: RestoreRecipientProps): Recipient {
 		return new Recipient({
 			id: Id.create(id),
 			name,

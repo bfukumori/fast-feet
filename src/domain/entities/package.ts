@@ -2,8 +2,8 @@ import { DomainError } from "@src/shared/errors/domain-error";
 import { PackageStatus } from "generated/prisma";
 import { Id } from "../value-objects/id";
 
-type InternalCreatePackageProps = {
-	id?: Id;
+export type InternalPackageProps = {
+	id: Id;
 	recipientId: string;
 	deliveryManId?: string | null;
 	status?: PackageStatus;
@@ -14,13 +14,8 @@ type InternalCreatePackageProps = {
 	deliveredPhotoUrl?: string | null;
 };
 
-type CreatePackageProps = Pick<
-	InternalCreatePackageProps,
-	"recipientId" | "description"
->;
-
-export type RestorePackageProps = Omit<InternalCreatePackageProps, "id"> & {
-	id: string;
+export type PackageProps = Omit<InternalPackageProps, "id"> & {
+	id?: string;
 };
 
 export class Package {
@@ -44,8 +39,8 @@ export class Package {
 		deliveredDate,
 		returnedDate,
 		deliveredPhotoUrl,
-	}: InternalCreatePackageProps) {
-		this.id = id ?? Id.create();
+	}: InternalPackageProps) {
+		this.id = id;
 		this.recipientId = recipientId;
 		this.deliveryManId = deliveryManId;
 		this.status = status ?? PackageStatus.AWAITING_PICKUP;
@@ -56,10 +51,30 @@ export class Package {
 		this.description = description;
 	}
 
+	public static readonly ERROR_MESSAGE = {
+		cantAwaitPickup:
+			"Package is not in a valid state to be awaited for pick up.",
+		cantPickup: "Package is not in a valid state to be picked up.",
+		cantDelivered: "Package is not in a valid state to be delivered.",
+		cantReturned: "Package is not in a valid state to be returned.",
+		deliveryManIdRequired:
+			"Delivery Man ID is required to pick up the package.",
+		deliveryPhotoProofRequired:
+			"Photo proof is required to mark the package as delivered.",
+	};
+
+	setPhotoProofUrl(url: string): void {
+		this.deliveredPhotoUrl = url;
+	}
+
+	setDeliveryManId(deliveryManId: string): void {
+		this.deliveryManId = deliveryManId;
+	}
+
 	updateToAwaitingPickUp(): void {
 		if (this.status !== PackageStatus.RETURNED) {
 			throw new DomainError(
-				"Package is not in a valid state to be awaited for pick up.",
+				Package.ERROR_MESSAGE.cantAwaitPickup,
 				Package.name,
 			);
 		}
@@ -72,85 +87,60 @@ export class Package {
 		this.status = PackageStatus.AWAITING_PICKUP;
 	}
 
-	updateToPickedUp(deliveryManId: string): void {
+	updateToPickedUp(): void {
 		if (this.status !== PackageStatus.AWAITING_PICKUP) {
-			throw new DomainError(
-				"Package is not in a valid state to be picked up.",
-				Package.name,
-			);
+			throw new DomainError(Package.ERROR_MESSAGE.cantPickup, Package.name);
 		}
 
-		if (!deliveryManId) {
-			throw new DomainError(
-				"Delivery Man ID is required to pick up the package.",
-				Package.name,
-			);
-		}
-
-		this.deliveryManId = deliveryManId;
 		this.status = PackageStatus.PICKED_UP;
 		this.pickedDate = new Date().toISOString();
 	}
 
-	updateToDelivered(deliveredPhotoUrl: string): void {
+	updateToDelivered(): void {
 		if (this.status !== PackageStatus.PICKED_UP) {
+			throw new DomainError(Package.ERROR_MESSAGE.cantDelivered, Package.name);
+		}
+
+		if (!this.deliveredPhotoUrl) {
 			throw new DomainError(
-				"Package is not in a valid state to be delivered.",
+				Package.ERROR_MESSAGE.deliveryPhotoProofRequired,
 				Package.name,
 			);
 		}
 
-		if (!deliveredPhotoUrl) {
-			throw new DomainError(
-				"Photo proof is required to mark the package as delivered.",
-				Package.name,
-			);
-		}
-
-		this.deliveredPhotoUrl = deliveredPhotoUrl;
 		this.status = PackageStatus.DELIVERED;
 		this.deliveredDate = new Date().toISOString();
 	}
 
 	updateToReturned(): void {
 		if (this.status !== PackageStatus.PICKED_UP) {
-			throw new DomainError(
-				"Package is not in a valid state to be returned.",
-				Package.name,
-			);
+			throw new DomainError(Package.ERROR_MESSAGE.cantReturned, Package.name);
 		}
 		this.status = PackageStatus.RETURNED;
 		this.returnedDate = new Date().toISOString();
 	}
 
-	static create({ recipientId, description }: CreatePackageProps): Package {
-		return new Package({
-			recipientId,
-			description,
-		});
-	}
-
-	static restore({
-		id,
+	static create({
 		recipientId,
-		deliveryManId,
-		status,
 		description,
-		pickedDate,
+		status,
 		deliveredDate,
-		returnedDate,
 		deliveredPhotoUrl,
-	}: RestorePackageProps): Package {
+		deliveryManId,
+		id,
+		pickedDate,
+		returnedDate,
+	}: PackageProps): Package {
 		return new Package({
 			id: Id.create(id),
 			recipientId,
-			deliveryManId,
 			description,
 			status,
-			pickedDate,
 			deliveredDate,
-			returnedDate,
 			deliveredPhotoUrl,
+			deliveryManId,
+			pickedDate,
+			returnedDate,
 		});
 	}
 }

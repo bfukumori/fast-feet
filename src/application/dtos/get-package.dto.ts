@@ -5,13 +5,13 @@ import { z } from "zod";
 export const packageSchema = z.object({
 	id: z.string().uuid(),
 	recipientId: z.string().uuid(),
-	deliveryManId: z.string().uuid().nullable(),
+	deliveryManId: z.string().uuid().nullish(),
 	status: z.nativeEnum(PackageStatus),
 	description: z.string(),
-	pickedDate: z.string().nullable(),
-	deliveredDate: z.string().nullable(),
-	returnedDate: z.string().nullable(),
-	deliveredPhotoUrl: z.string().url().nullable(),
+	pickedDate: z.string().nullish(),
+	deliveredDate: z.string().nullish(),
+	returnedDate: z.string().nullish(),
+	deliveredPhotoUrl: z.string().url().nullish(),
 });
 
 export class GetPackageDto extends createZodDto(packageSchema) {}

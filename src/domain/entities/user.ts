@@ -5,24 +5,19 @@ import { Id } from "../value-objects/id";
 import { Password } from "../value-objects/password";
 
 type InternalUserProps = {
-	id?: Id;
+	id: Id;
 	name: string;
 	cpf: Cpf;
 	password: Password;
-	role?: Role;
+	role: Role;
 };
 
-type UserProps = {
+export type UserProps = {
+	id?: string;
 	name: string;
 	cpf: string;
 	password: string;
 	role: Role;
-};
-
-export type RestoreUserProps = Pick<InternalUserProps, "name" | "role"> & {
-	id: string;
-	cpf: string;
-	password: string;
 };
 
 export class User {
@@ -33,12 +28,17 @@ export class User {
 	public role: Role;
 
 	private constructor({ name, cpf, password, role, id }: InternalUserProps) {
-		this.id = id ?? Id.create();
+		this.id = id;
 		this.name = name;
 		this.cpf = cpf;
 		this.password = password;
-		this.role = role ?? Role.DELIVERY_MAN;
+		this.role = role;
 	}
+
+	public static readonly ERROR_MESSAGE = {
+		invalidRole: "Invalid role",
+		alreadyExists: "User already exists.",
+	};
 
 	changePassword(password: string): void {
 		this.password = Password.createFromHashed(password);
@@ -54,18 +54,9 @@ export class User {
 		this.role = role;
 	}
 
-	static create({ name, cpf, password, role }: UserProps): User {
+	static create({ name, cpf, password, role, id }: UserProps): User {
 		User.validateRole(role);
 
-		return new User({
-			name,
-			cpf: Cpf.create(cpf),
-			password: Password.createFromHashed(password),
-			role,
-		});
-	}
-
-	static restore({ name, cpf, password, role, id }: RestoreUserProps): User {
 		return new User({
 			id: Id.create(id),
 			name,

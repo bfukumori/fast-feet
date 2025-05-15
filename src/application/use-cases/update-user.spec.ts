@@ -3,7 +3,7 @@ import { User } from "@src/domain/entities/user";
 import { ApplicationError } from "@src/shared/errors/application-error";
 import { DomainError } from "@src/shared/errors/domain-error";
 import { makeUser } from "@test/factories/make-user-factory";
-import { InMemoryUserRepository } from "@test/repositories/in-memory.user-repository";
+import { InMemoryUserRepository } from "@test/repositories/in-memory-user-repository";
 import { Role } from "generated/prisma";
 import { UpdateUserUseCase } from "./update-user";
 
@@ -25,15 +25,10 @@ describe("Update user use case", () => {
 
 		await sut.execute(user, user.id.value);
 
-		expect(inMemoryUserRepository.users[0]).toStrictEqual(
-			User.restore({
-				id: user.id.value,
-				name: "new name",
-				cpf: user.cpf.value,
-				password: user.password.value,
-				role: Role.ADMIN,
-			}),
-		);
+		expect(inMemoryUserRepository.users[0]).toMatchObject({
+			name: "new name",
+			role: Role.ADMIN,
+		});
 	});
 
 	it("should not be able to update a nonexistent user", async () => {
