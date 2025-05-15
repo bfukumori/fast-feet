@@ -6,6 +6,7 @@ import {
 	Param,
 	Put,
 } from "@nestjs/common";
+import { ApiOperation } from "@nestjs/swagger";
 import { UpdateUserDto } from "@src/application/dtos/update-user.dto";
 import { UpdateUserUseCase } from "@src/application/use-cases/update-user";
 
@@ -15,6 +16,7 @@ export class UpdateUserController {
 
 	@Put("/:userId/edit")
 	@HttpCode(HttpStatus.NO_CONTENT)
+	@ApiOperation({ summary: "Update a user name or role" })
 	async update(
 		@Param("userId") userId: string,
 		@Body() updateUserDto: UpdateUserDto,
