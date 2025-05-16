@@ -3,7 +3,6 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
 export const createUserSchema = z.object({
-	id: z.string().optional(),
 	name: z.string(),
 	cpf: z.string().regex(/^\d{11}$/, { message: "Cpf must be 11 digits." }),
 	password: z.string(),
@@ -11,5 +10,3 @@ export const createUserSchema = z.object({
 });
 
 export class CreateUserDto extends createZodDto(createUserSchema) {}
-
-export type CreateUserInput = z.infer<typeof createUserSchema>;

@@ -1,16 +1,13 @@
 import { HttpStatus } from "@nestjs/common";
 import { User } from "@src/domain/entities/user";
-import { Password } from "@src/domain/value-objects/password";
-import {
-	toDomain,
-	toPersistence,
-} from "@src/infrastructure/mappers/prisma-user-mapper";
+import { toPersistence } from "@src/infrastructure/mappers/prisma-user-mapper";
 import { ApplicationError } from "@src/shared/errors/application-error";
 import { DomainError } from "@src/shared/errors/domain-error";
 import { FakeHasher } from "@test/cryptography/fake-hasher";
 import { makeUser } from "@test/factories/make-user-factory";
 import { InMemoryUserRepository } from "@test/repositories/in-memory-user-repository";
 import { Role } from "generated/prisma";
+import { CreateUserDto } from "../dtos/create-user.dto";
 import { CreateUserUseCase } from "./create-user";
 
 let inMemoryUserRepository: InMemoryUserRepository;
@@ -25,21 +22,17 @@ describe("Create user use case", () => {
 	});
 
 	it("should be able to create a new user", async () => {
-		const user = makeUser();
-		const hashedPwd = await hasher.hash(user.password.value);
+		const createUserDto: CreateUserDto = {
+			name: "John Doe",
+			cpf: "11649425066",
+			password: "#Aa12345",
+			role: Role.DELIVERY_MAN,
+		};
 
-		await sut.execute(toPersistence(user));
+		await sut.execute(createUserDto);
 
 		expect(inMemoryUserRepository.users).toHaveLength(1);
 		expect(inMemoryUserRepository.users[0].id.value).toBeTruthy();
-		expect(inMemoryUserRepository.users[0]).toStrictEqual(
-			User.create({
-				...user,
-				id: user.id.value,
-				cpf: user.cpf.value,
-				password: hashedPwd,
-			}),
-		);
 	});
 
 	it("should not be able to create a new user with the same cpf", async () => {

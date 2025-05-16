@@ -2,13 +2,13 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { User } from "@src/domain/entities/user";
 import { UserRepository } from "@src/domain/repositories/user-repository";
 import { ApplicationError } from "@src/shared/errors/application-error";
-import { UpdateUserInput } from "../dtos/update-user.dto";
+import { UpdateUserDto } from "../dtos/update-user.dto";
 
 @Injectable()
 export class UpdateUserUseCase {
 	constructor(private readonly userRepository: UserRepository) {}
 
-	async execute({ name, role }: UpdateUserInput, userId: string) {
+	async execute({ name, role }: UpdateUserDto, userId: string) {
 		const existingUser = await this.userRepository.getUserById(userId);
 
 		if (!existingUser) {

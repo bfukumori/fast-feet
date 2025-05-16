@@ -3,7 +3,7 @@ import { User } from "@src/domain/entities/user";
 import { UserRepository } from "@src/domain/repositories/user-repository";
 import { Password } from "@src/domain/value-objects/password";
 import { ApplicationError } from "@src/shared/errors/application-error";
-import { CreateUserInput } from "../dtos/create-user.dto";
+import { CreateUserDto } from "../dtos/create-user.dto";
 import { Hasher } from "../services/cryptography/hasher";
 
 @Injectable()
@@ -13,7 +13,7 @@ export class CreateUserUseCase {
 		private readonly hasher: Hasher,
 	) {}
 
-	async execute({ cpf, name, password, role, id }: CreateUserInput) {
+	async execute({ cpf, name, password, role }: CreateUserDto) {
 		const userWithSameCpf = await this.userRepository.getUserByCpf(cpf);
 
 		if (userWithSameCpf) {
@@ -28,7 +28,6 @@ export class CreateUserUseCase {
 		const hashedPassword = await this.hasher.hash(rawPassword);
 
 		const user = User.create({
-			id,
 			name,
 			cpf,
 			password: hashedPassword,

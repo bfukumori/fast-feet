@@ -21,6 +21,11 @@ export type UserProps = {
 };
 
 export class User {
+	public static readonly ERROR_MESSAGE = {
+		invalidRole: "Invalid role",
+		alreadyExists: "User already exists.",
+	};
+
 	public readonly id: Id;
 	public name: string;
 	public readonly cpf: Cpf;
@@ -34,11 +39,6 @@ export class User {
 		this.password = password;
 		this.role = role;
 	}
-
-	public static readonly ERROR_MESSAGE = {
-		invalidRole: "Invalid role",
-		alreadyExists: "User already exists.",
-	};
 
 	changePassword(password: string): void {
 		this.password = Password.createFromHashed(password);
