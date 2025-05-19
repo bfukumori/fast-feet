@@ -24,13 +24,15 @@ export class CreateUserUseCase {
 			);
 		}
 
-		const rawPassword = Password.createFromPlain(password);
-		const hashedPassword = await this.hasher.hash(rawPassword);
+		const hashedPassword = await Password.createFromPlain(
+			password,
+			this.hasher,
+		);
 
 		const user = User.create({
 			name,
 			cpf,
-			password: hashedPassword,
+			password: hashedPassword.toString(),
 			role,
 		});
 

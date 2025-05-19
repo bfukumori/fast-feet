@@ -1,3 +1,5 @@
+import { Hasher } from "@src/application/services/cryptography/hasher";
+import { BcryptHasher } from "@src/infrastructure/services/cryptography/bcrypt/bcrypt-hasher";
 import { DomainError } from "@src/shared/errors/domain-error";
 import { Password } from "./password";
 
@@ -10,18 +12,28 @@ const INVALID_LOWERCASE_PASSWORD = "#AA12345";
 const INVALID_NUMBER_PASSWORD = "#Aaaaaaa";
 const INVALID_SPECIAL_CHAR_PASSWORD = "AAa12345";
 
-describe("[Value Object] Password", () => {
-	test("create a new password", async () => {
-		const plainPassword = Password.createFromPlain(VALID_PASSWORD);
-		const password = Password.createFromHashed(plainPassword);
+let hasher: Hasher;
 
-		expect(plainPassword).toBe(VALID_PASSWORD);
-		expect(password.toString()).toBe(VALID_PASSWORD);
+describe("[Value Object] Password", () => {
+	beforeAll(() => {
+		hasher = new BcryptHasher();
+	});
+
+	test("create a new password", async () => {
+		const password = await Password.createFromPlain(VALID_PASSWORD, hasher);
+
+		const isValid = await Password.isValid(
+			VALID_PASSWORD,
+			password.value,
+			hasher,
+		);
+
+		expect(isValid).toBe(true);
 	});
 
 	test("create with invalid password (at least 8 chars length)", async () => {
 		await expect(async () => {
-			Password.createFromPlain(INVALID_MIN_LENGTH_PASSWORD);
+			await Password.createFromPlain(INVALID_MIN_LENGTH_PASSWORD, hasher);
 		}).rejects.toThrow(
 			new DomainError(
 				Password.ERROR_MESSAGE.minLength,
@@ -33,7 +45,7 @@ describe("[Value Object] Password", () => {
 
 	test("create with invalid password (no white spaces)", async () => {
 		await expect(async () => {
-			Password.createFromPlain(INVALID_WHITE_SPACE_PASSWORD);
+			await Password.createFromPlain(INVALID_WHITE_SPACE_PASSWORD, hasher);
 		}).rejects.toThrow(
 			new DomainError(
 				Password.ERROR_MESSAGE.whiteSpace,
@@ -45,7 +57,7 @@ describe("[Value Object] Password", () => {
 
 	test("create with invalid password (at least 1 uppercase)", async () => {
 		await expect(async () => {
-			Password.createFromPlain(INVALID_UPPERCASE_PASSWORD);
+			await Password.createFromPlain(INVALID_UPPERCASE_PASSWORD, hasher);
 		}).rejects.toThrow(
 			new DomainError(
 				Password.ERROR_MESSAGE.uppercase,
@@ -57,7 +69,7 @@ describe("[Value Object] Password", () => {
 
 	test("create with invalid password (at least 1 lowercase)", async () => {
 		await expect(async () => {
-			Password.createFromPlain(INVALID_LOWERCASE_PASSWORD);
+			await Password.createFromPlain(INVALID_LOWERCASE_PASSWORD, hasher);
 		}).rejects.toThrow(
 			new DomainError(
 				Password.ERROR_MESSAGE.lowercase,
@@ -69,7 +81,7 @@ describe("[Value Object] Password", () => {
 
 	test("create with invalid password (at least 1 number)", async () => {
 		await expect(async () => {
-			Password.createFromPlain(INVALID_NUMBER_PASSWORD);
+			await Password.createFromPlain(INVALID_NUMBER_PASSWORD, hasher);
 		}).rejects.toThrow(
 			new DomainError(
 				Password.ERROR_MESSAGE.number,
@@ -81,7 +93,7 @@ describe("[Value Object] Password", () => {
 
 	test("create with invalid password (at least 1 specialChar)", async () => {
 		await expect(async () => {
-			Password.createFromPlain(INVALID_SPECIAL_CHAR_PASSWORD);
+			await Password.createFromPlain(INVALID_SPECIAL_CHAR_PASSWORD, hasher);
 		}).rejects.toThrow(
 			new DomainError(
 				Password.ERROR_MESSAGE.specialChar,

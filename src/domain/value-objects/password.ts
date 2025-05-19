@@ -1,3 +1,4 @@
+import { Hasher } from "@src/application/services/cryptography/hasher";
 import { DomainError } from "@src/shared/errors/domain-error";
 
 export class Password {
@@ -32,13 +33,23 @@ export class Password {
 		return this._value;
 	}
 
-	static createFromPlain(value: string): string {
+	static async createFromPlain(
+		value: string,
+		hasher: Hasher,
+	): Promise<Password> {
 		Password.validate(value);
-		return value;
+
+		const hashedPwd = await hasher.hash(value);
+
+		return new Password(hashedPwd);
 	}
 
 	static createFromHashed(hashed: string): Password {
 		return new Password(hashed);
+	}
+
+	static async isValid(pwd: string, hashedPwd: string, hasher: Hasher) {
+		return await hasher.compare(pwd, hashedPwd);
 	}
 
 	private static validate(password: string) {
