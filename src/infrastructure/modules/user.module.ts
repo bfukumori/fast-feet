@@ -26,5 +26,6 @@ import { CryptographyModule } from "./cryptography.module";
 		GetUserByIdUseCase,
 		GetUserByCpfUseCase,
 	],
+	exports: [DatabaseModule, CryptographyModule],
 })
 export class UserModule {}

@@ -12,5 +12,3 @@ export const createRecipientSchema = z.object({
 });
 
 export class CreateRecipientDto extends createZodDto(createRecipientSchema) {}
-
-export type CreateRecipientInput = z.infer<typeof createRecipientSchema>;

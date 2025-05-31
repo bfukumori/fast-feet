@@ -8,7 +8,11 @@ export default defineConfig({
 		globals: true,
 		root: "./",
 		coverage: {
-			include: ["src/application/use-cases", "src/domain"],
+			include: [
+				"src/application/use-cases",
+				"src/domain",
+				"src/infrastructure/guards",
+			],
 			provider: "v8",
 			reporter: ["text", "json", "html"],
 		},

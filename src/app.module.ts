@@ -1,7 +1,11 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
+import { JwtService } from "@nestjs/jwt";
 import { ZodSerializerInterceptor, ZodValidationPipe } from "nestjs-zod";
+import { AuthGuard } from "./infrastructure/guards/auth/auth.guard";
+import { RolesGuard } from "./infrastructure/guards/auth/roles.guard";
+import { AuthModule } from "./infrastructure/modules/auth.module";
 import { UserModule } from "./infrastructure/modules/user.module";
 import { EnvModule } from "./shared/config/env/env.module";
 import { envSchema } from "./shared/config/env/env.schema";
@@ -13,9 +17,11 @@ import { envSchema } from "./shared/config/env/env.schema";
 			validate: (env) => envSchema.parse(env),
 		}),
 		EnvModule,
+		AuthModule,
 		UserModule,
 	],
 	providers: [
+		JwtService,
 		{
 			provide: APP_PIPE,
 			useClass: ZodValidationPipe,
@@ -24,6 +30,15 @@ import { envSchema } from "./shared/config/env/env.schema";
 			provide: APP_INTERCEPTOR,
 			useClass: ZodSerializerInterceptor,
 		},
+		{
+			provide: APP_GUARD,
+			useClass: AuthGuard,
+		},
+		{
+			provide: APP_GUARD,
+			useClass: RolesGuard,
+		},
 	],
 })
 export class AppModule {}
+("");

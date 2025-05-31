@@ -1,4 +1,6 @@
+import { randomUUID } from "node:crypto";
 import { HttpStatus, INestApplication } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
 import { AppModule } from "@src/app.module";
@@ -11,6 +13,7 @@ describe("Get user [e2e]", () => {
 	let app: INestApplication;
 	let prismaService: PrismaService;
 	let userFactory: UserFactory;
+	let jwtService: JwtService;
 
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
@@ -23,6 +26,7 @@ describe("Get user [e2e]", () => {
 
 		prismaService = moduleRef.get(PrismaService);
 		userFactory = moduleRef.get(UserFactory);
+		jwtService = moduleRef.get(JwtService);
 
 		await app.listen(0);
 	});
@@ -34,9 +38,11 @@ describe("Get user [e2e]", () => {
 	test("[GET] Get user by its id", async () => {
 		const user = await userFactory.makePrismaUser();
 
-		const response = await request(app.getHttpServer()).get(
-			`/api/users/${user.id.value}`,
-		);
+		const accessToken = jwtService.sign({ sub: "" });
+
+		const response = await request(app.getHttpServer())
+			.get(`/api/users/${user.id.value}`)
+			.set("Authorization", `Bearer ${accessToken}`);
 
 		expect(response.statusCode).toBe(HttpStatus.OK);
 
@@ -52,9 +58,11 @@ describe("Get user [e2e]", () => {
 	test("[GET] Get user by its cpf", async () => {
 		const user = await userFactory.makePrismaUser();
 
-		const response = await request(app.getHttpServer()).get(
-			`/api/users?cpf=${user.cpf.value}`,
-		);
+		const accessToken = jwtService.sign({ sub: "" });
+
+		const response = await request(app.getHttpServer())
+			.get(`/api/users?cpf=${user.cpf.value}`)
+			.set("Authorization", `Bearer ${accessToken}`);
 
 		expect(response.statusCode).toBe(HttpStatus.OK);
 
@@ -68,10 +76,13 @@ describe("Get user [e2e]", () => {
 	});
 
 	it("should return null if can't find a user with a given id", async () => {
-		const invalidUserId = "invalid-id";
-		const response = await request(app.getHttpServer()).get(
-			`/api/users/${invalidUserId}`,
-		);
+		const invalidUserId = randomUUID();
+
+		const accessToken = jwtService.sign({ sub: "" });
+
+		const response = await request(app.getHttpServer())
+			.get(`/api/users/${invalidUserId}`)
+			.set("Authorization", `Bearer ${accessToken}`);
 
 		const userOnDatabase = await prismaService.user.findFirst({
 			where: {
@@ -84,10 +95,13 @@ describe("Get user [e2e]", () => {
 	});
 
 	it("should return null if can't find a user with a given cpf", async () => {
-		const invalidUserCpf = "invalid-cpf";
-		const response = await request(app.getHttpServer()).get(
-			`/api/users?cpf=${invalidUserCpf}`,
-		);
+		const invalidUserCpf = "12345678901";
+
+		const accessToken = jwtService.sign({ sub: "" });
+
+		const response = await request(app.getHttpServer())
+			.get(`/api/users?cpf=${invalidUserCpf}`)
+			.set("Authorization", `Bearer ${accessToken}`);
 
 		const userOnDatabase = await prismaService.user.findFirst({
 			where: {

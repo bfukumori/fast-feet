@@ -1,0 +1,18 @@
+meta {
+  name: sign-in
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/sign-in
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "cpf":"68720915098",
+    "password":"#Aa12345"
+  }
+}

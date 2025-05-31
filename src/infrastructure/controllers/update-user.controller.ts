@@ -7,6 +7,7 @@ import {
 	Put,
 } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
+import { IdQueryDto } from "@src/application/dtos/id-query.dto";
 import { UpdateUserDto } from "@src/application/dtos/update-user.dto";
 import { UpdateUserUseCase } from "@src/application/use-cases/update-user";
 
@@ -14,13 +15,13 @@ import { UpdateUserUseCase } from "@src/application/use-cases/update-user";
 export class UpdateUserController {
 	constructor(private readonly updateUserUseCase: UpdateUserUseCase) {}
 
-	@Put("/:userId/edit")
+	@Put("/:id/edit")
 	@HttpCode(HttpStatus.NO_CONTENT)
 	@ApiOperation({ summary: "Update a user name or role" })
 	async update(
-		@Param("userId") userId: string,
+		@Param() { id }: IdQueryDto,
 		@Body() updateUserDto: UpdateUserDto,
 	): Promise<void> {
-		await this.updateUserUseCase.execute(updateUserDto, userId);
+		await this.updateUserUseCase.execute(updateUserDto, id);
 	}
 }

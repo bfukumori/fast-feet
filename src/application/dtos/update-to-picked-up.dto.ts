@@ -6,5 +6,3 @@ export const updateToPickedUpSchema = z.object({
 });
 
 export class UpdateToPickedUpDto extends createZodDto(updateToPickedUpSchema) {}
-
-export type UpdateToPickedUpInput = z.infer<typeof updateToPickedUpSchema>;

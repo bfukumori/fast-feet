@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Recipient } from "@src/domain/entities/recipient";
 import { RecipientRepository } from "@src/domain/repositories/recipient-repository";
-import { CreateRecipientInput } from "../dtos/create-recipient.dto";
+import { CreateRecipientDto } from "../dtos/create-recipient.dto";
 
 @Injectable()
 export class CreateRecipientUseCase {
@@ -15,7 +15,7 @@ export class CreateRecipientUseCase {
 		street,
 		zipCode,
 		complement,
-	}: CreateRecipientInput) {
+	}: CreateRecipientDto) {
 		const recipient = Recipient.create({
 			name,
 			city,

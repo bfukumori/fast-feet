@@ -7,5 +7,3 @@ export const createPackageSchema = z.object({
 });
 
 export class CreatePackageDto extends createZodDto(createPackageSchema) {}
-
-export type CreatePackageInput = z.infer<typeof createPackageSchema>;

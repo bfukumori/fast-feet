@@ -6,16 +6,17 @@ import {
 	Param,
 } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
+import { IdQueryDto } from "@src/application/dtos/id-query.dto";
 import { DeleteUserUseCase } from "@src/application/use-cases/delete-user";
 
 @Controller("users")
 export class DeleteUserController {
 	constructor(private readonly deleteUserUseCase: DeleteUserUseCase) {}
 
-	@Delete("/:userId/delete")
+	@Delete("/:id/delete")
 	@HttpCode(HttpStatus.NO_CONTENT)
 	@ApiOperation({ summary: "Delete a user" })
-	async delete(@Param("userId") userId: string): Promise<void> {
-		await this.deleteUserUseCase.execute(userId);
+	async delete(@Param() { id }: IdQueryDto): Promise<void> {
+		await this.deleteUserUseCase.execute(id);
 	}
 }

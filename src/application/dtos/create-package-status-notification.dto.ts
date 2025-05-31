@@ -10,7 +10,3 @@ export const createPackageStatusNotificationSchema = z.object({
 export class CreatePackageStatusNotificationDto extends createZodDto(
 	createPackageStatusNotificationSchema,
 ) {}
-
-export type CreatePackageStatusNotificationInput = z.infer<
-	typeof createPackageStatusNotificationSchema
->;

@@ -1,6 +1,6 @@
 import { Hasher } from "@src/application/services/cryptography/hasher";
-import { BcryptHasher } from "@src/infrastructure/services/cryptography/bcrypt/bcrypt-hasher";
 import { DomainError } from "@src/shared/errors/domain-error";
+import { FakeHasher } from "@test/cryptography/fake-hasher";
 import { Password } from "./password";
 
 const HTTP_STATUS_CODE = 400;
@@ -16,7 +16,7 @@ let hasher: Hasher;
 
 describe("[Value Object] Password", () => {
 	beforeAll(() => {
-		hasher = new BcryptHasher();
+		hasher = new FakeHasher();
 	});
 
 	test("create a new password", async () => {

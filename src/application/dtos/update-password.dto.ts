@@ -11,5 +11,3 @@ export const updatePasswordSchema = z
 	});
 
 export class UpdatePasswordDto extends createZodDto(updatePasswordSchema) {}
-
-export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>;

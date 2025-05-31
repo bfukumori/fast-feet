@@ -1,4 +1,5 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
 import { AppModule } from "@src/app.module";
@@ -12,6 +13,7 @@ describe("Update user [e2e]", () => {
 	let app: INestApplication;
 	let prismaService: PrismaService;
 	let userFactory: UserFactory;
+	let jwtService: JwtService;
 
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
@@ -24,6 +26,7 @@ describe("Update user [e2e]", () => {
 
 		prismaService = moduleRef.get(PrismaService);
 		userFactory = moduleRef.get(UserFactory);
+		jwtService = moduleRef.get(JwtService);
 
 		await app.listen(0);
 	});
@@ -35,8 +38,11 @@ describe("Update user [e2e]", () => {
 			name: "updated name",
 		};
 
+		const accessToken = jwtService.sign({ sub: "" });
+
 		const response = await request(app.getHttpServer())
 			.put(`/api/users/${user.id.value}/edit`)
+			.set("Authorization", `Bearer ${accessToken}`)
 			.send(updateUserDto);
 
 		expect(response.statusCode).toBe(HttpStatus.NO_CONTENT);

@@ -1,4 +1,5 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
 import { AppModule } from "@src/app.module";
@@ -11,6 +12,7 @@ import request from "supertest";
 describe("Create user [e2e]", () => {
 	let app: INestApplication;
 	let prismaService: PrismaService;
+	let jwtService: JwtService;
 
 	const mockHasher = {
 		hash: vi.fn().mockResolvedValue("hashed-password"),
@@ -28,6 +30,7 @@ describe("Create user [e2e]", () => {
 		app.setGlobalPrefix("api");
 
 		prismaService = moduleRef.get(PrismaService);
+		jwtService = moduleRef.get(JwtService);
 
 		await app.listen(0);
 	});
@@ -40,8 +43,11 @@ describe("Create user [e2e]", () => {
 			role: Role.DELIVERY_MAN,
 		};
 
+		const accessToken = jwtService.sign({ sub: "" });
+
 		const response = await request(app.getHttpServer())
 			.post("/api/users/new")
+			.set("Authorization", `Bearer ${accessToken}`)
 			.send(createUserDto);
 
 		expect(response.statusCode).toBe(HttpStatus.CREATED);
