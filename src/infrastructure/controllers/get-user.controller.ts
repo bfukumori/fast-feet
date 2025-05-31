@@ -5,8 +5,11 @@ import { GetUserDto } from "@src/application/dtos/get-user.dto";
 import { IdQueryDto } from "@src/application/dtos/id-query.dto";
 import { GetUserByCpfUseCase } from "@src/application/use-cases/get-user-by-cpf";
 import { GetUserByIdUseCase } from "@src/application/use-cases/get-user-by-id";
+import { Role } from "generated/prisma";
 import { ZodSerializerDto } from "nestjs-zod";
+import { Roles } from "../decorators/roles.decorator";
 
+@Roles(Role.ADMIN)
 @Controller("users")
 export class GetUserController {
 	constructor(

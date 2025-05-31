@@ -8,7 +8,10 @@ import {
 import { ApiOperation } from "@nestjs/swagger";
 import { IdQueryDto } from "@src/application/dtos/id-query.dto";
 import { DeleteUserUseCase } from "@src/application/use-cases/delete-user";
+import { Role } from "generated/prisma";
+import { Roles } from "../decorators/roles.decorator";
 
+@Roles(Role.ADMIN)
 @Controller("users")
 export class DeleteUserController {
 	constructor(private readonly deleteUserUseCase: DeleteUserUseCase) {}

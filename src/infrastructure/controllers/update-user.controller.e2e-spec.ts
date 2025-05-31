@@ -7,6 +7,7 @@ import { UpdateUserDto } from "@src/application/dtos/update-user.dto";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
 import { UserFactory } from "@test/factories/make-user-factory";
+import { Role } from "generated/prisma";
 import request from "supertest";
 
 describe("Update user [e2e]", () => {
@@ -38,7 +39,7 @@ describe("Update user [e2e]", () => {
 			name: "updated name",
 		};
 
-		const accessToken = jwtService.sign({ sub: "" });
+		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
 
 		const response = await request(app.getHttpServer())
 			.put(`/api/users/${user.id.value}/edit`)

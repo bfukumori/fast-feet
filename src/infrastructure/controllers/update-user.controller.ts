@@ -10,7 +10,10 @@ import { ApiOperation } from "@nestjs/swagger";
 import { IdQueryDto } from "@src/application/dtos/id-query.dto";
 import { UpdateUserDto } from "@src/application/dtos/update-user.dto";
 import { UpdateUserUseCase } from "@src/application/use-cases/update-user";
+import { Role } from "generated/prisma";
+import { Roles } from "../decorators/roles.decorator";
 
+@Roles(Role.ADMIN)
 @Controller("users")
 export class UpdateUserController {
 	constructor(private readonly updateUserUseCase: UpdateUserUseCase) {}

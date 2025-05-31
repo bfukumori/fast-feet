@@ -43,7 +43,7 @@ describe("Create user [e2e]", () => {
 			role: Role.DELIVERY_MAN,
 		};
 
-		const accessToken = jwtService.sign({ sub: "" });
+		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
 
 		const response = await request(app.getHttpServer())
 			.post("/api/users/new")

@@ -6,6 +6,7 @@ import { AppModule } from "@src/app.module";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
 import { UserFactory } from "@test/factories/make-user-factory";
+import { Role } from "generated/prisma";
 import request from "supertest";
 
 describe("Delete user [e2e]", () => {
@@ -33,7 +34,7 @@ describe("Delete user [e2e]", () => {
 	test("[DELETE] Delete user", async () => {
 		const user = await userFactory.makePrismaUser();
 
-		const accessToken = jwtService.sign({ sub: "" });
+		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
 
 		const response = await request(app.getHttpServer())
 			.delete(`/api/users/${user.id.value}/delete`)
