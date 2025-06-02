@@ -1,0 +1,18 @@
+meta {
+  name: create package
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/packages/new
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "description": "Package 4",
+    "recipientId": "56e7ecb1-1f6a-4261-90a8-374d0a06aa08"
+  }
+}

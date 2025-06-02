@@ -1,0 +1,24 @@
+meta {
+  name: delete package
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/packages/:id/delete
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: fca8bba3-7117-4908-814f-275b39a5f197
+}
+
+body:json {
+  {
+    "name": "Bruno Fukumori",
+    "cpf": "368619468a69",
+    "password": "#Aa12345",
+    "role": "DELIVERY_MAN"
+  }
+}

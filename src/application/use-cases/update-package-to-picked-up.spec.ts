@@ -29,6 +29,7 @@ describe("Update to picked up use case", () => {
 		expect(inMemoryPackageRepository.packs[0]).toMatchObject({
 			status: PackageStatus.PICKED_UP,
 		});
+		expect(inMemoryPackageRepository.packs[0].pickedDate).not.toBeNull();
 	});
 
 	it("should not be able to update a nonexistent package", async () => {

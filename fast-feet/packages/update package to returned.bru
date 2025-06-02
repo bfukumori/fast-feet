@@ -1,0 +1,21 @@
+meta {
+  name: update package to returned
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/packages/:id/to-return
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: fca8bba3-7117-4908-814f-275b39a5f197
+}
+
+body:json {
+  {
+    "photoProofUrl": "http://www.photo.com.br"
+  }
+}

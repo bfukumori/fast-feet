@@ -6,7 +6,7 @@ import { ApplicationError } from "@src/shared/errors/application-error";
 export class UpdateToDeliveredUseCase {
 	constructor(private readonly packageRepository: PackageRepository) {}
 
-	async execute(packageId: string, photoProofUrl: string) {
+	async execute(packageId: string, photoProofUrl: string, userId: string) {
 		const existingPackage =
 			await this.packageRepository.getPackageById(packageId);
 
@@ -18,8 +18,16 @@ export class UpdateToDeliveredUseCase {
 			);
 		}
 
-		existingPackage.updateToDelivered();
+		if (userId !== existingPackage.deliveryManId) {
+			throw new ApplicationError(
+				`You don't have enough permissions.`,
+				UpdateToDeliveredUseCase.name,
+				HttpStatus.FORBIDDEN,
+			);
+		}
+
 		existingPackage.setPhotoProofUrl(photoProofUrl);
+		existingPackage.updateToDelivered();
 
 		await this.packageRepository.updatePackage(existingPackage);
 	}

@@ -1,0 +1,23 @@
+meta {
+  name: create recipient
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/recipients/new
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Recipient 1",
+    "state": "SP",
+    "city": "City 1",
+    "number": "Number 1",
+    "street": "Street 1",
+    "zipCode": "04113080",
+    "complement": "Complement 1"
+  }
+}

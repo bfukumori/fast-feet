@@ -24,7 +24,7 @@ export function toDomain(pack: PrismaPackage): Package {
 		recipientId: pack.recipientId,
 		status: pack.status,
 		description: pack.description,
-		pickedDate: pack.pickedDate?.toISOString(),
+		pickedDate: pack.pickedDate ? pack.pickedDate.toISOString() : null,
 		deliveredDate: pack.deliveredDate?.toISOString(),
 		deliveredPhotoUrl: pack.deliveredPhotoUrl,
 		returnedDate: pack.returnedDate?.toISOString(),

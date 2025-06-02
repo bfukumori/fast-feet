@@ -10,7 +10,7 @@ export default defineConfig({
 		root: "./",
 		setupFiles: ["./test/setup-e2e.ts"],
 		coverage: {
-			include: ["src/infrastructure/mappers", "src/infrastructure/controllers"],
+			include: ["src/infrastructure/controllers"],
 			provider: "v8",
 			reporter: ["text", "json", "html"],
 		},

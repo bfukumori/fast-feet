@@ -1,0 +1,21 @@
+meta {
+  name: update package to picked up
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/packages/:id/to-picked
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: b509279d-ec20-4b57-89ee-b9ea433abf89
+}
+
+body:json {
+  {
+    "deliveryManId": "a44687d6-000b-415b-8a0c-cc9b8b83dfb1"
+  }
+}

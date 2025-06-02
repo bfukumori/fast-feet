@@ -53,8 +53,8 @@ model Package {
   createdAt         DateTime      @default(now()) @map("created_at")
   updatedAt         DateTime      @updatedAt @map("updated_at")
 
-  User                      User?                       @relation(fields: [deliveryManId], references: [id])
-  Recipient                 Recipient                   @relation(fields: [recipientId], references: [id])
+  User                      User?                       @relation(fields: [deliveryManId], references: [id], onDelete: SetNull)
+  Recipient                 Recipient                   @relation(fields: [recipientId], references: [id], onDelete: Cascade)
   packageStatusNotification PackageStatusNotification[]
 
   @@map("packages")
@@ -73,7 +73,7 @@ model PackageStatusNotification {
   status     PackageStatus
   notifiedAt DateTime      @default(now()) @map("notified_at")
 
-  Package Package @relation(fields: [packageId], references: [id])
+  Package Package @relation(fields: [packageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("package_status_notifications")
 }

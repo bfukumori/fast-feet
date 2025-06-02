@@ -6,6 +6,8 @@ import { ZodSerializerInterceptor, ZodValidationPipe } from "nestjs-zod";
 import { AuthGuard } from "./infrastructure/guards/auth/auth.guard";
 import { RolesGuard } from "./infrastructure/guards/auth/roles.guard";
 import { AuthModule } from "./infrastructure/modules/auth.module";
+import { PackageModule } from "./infrastructure/modules/package.module";
+import { RecipientModule } from "./infrastructure/modules/recipient.module";
 import { UserModule } from "./infrastructure/modules/user.module";
 import { EnvModule } from "./shared/config/env/env.module";
 import { envSchema } from "./shared/config/env/env.schema";
@@ -19,6 +21,8 @@ import { envSchema } from "./shared/config/env/env.schema";
 		EnvModule,
 		AuthModule,
 		UserModule,
+		PackageModule,
+		RecipientModule,
 	],
 	providers: [
 		JwtService,

@@ -1,0 +1,21 @@
+meta {
+  name: update recipient
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/recipients/:id/edit
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 30c0fe43-4b2a-44aa-9a93-27278966e97c
+}
+
+body:json {
+  {
+    "complement": "Novo complemento"
+  }
+}

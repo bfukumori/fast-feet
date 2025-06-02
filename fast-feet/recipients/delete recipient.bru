@@ -1,0 +1,24 @@
+meta {
+  name: delete recipient
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/recipients/:id/delete
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 30c0fe43-4b2a-44aa-9a93-27278966e97c
+}
+
+body:json {
+  {
+    "name": "Bruno Fukumori",
+    "cpf": "368619468a69",
+    "password": "#Aa12345",
+    "role": "DELIVERY_MAN"
+  }
+}
