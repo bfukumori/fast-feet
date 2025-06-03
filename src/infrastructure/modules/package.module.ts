@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { CreatePackageUseCase } from "@src/application/use-cases/create-package";
 import { DeletePackageUseCase } from "@src/application/use-cases/delete-package";
+import { GetAllPackagesUseCase } from "@src/application/use-cases/get-all-packages";
 import { GetPackageByIdUseCase } from "@src/application/use-cases/get-package-by-id";
 import { UpdateToAwaitingPickUpUseCase } from "@src/application/use-cases/update-package-to-awating-pick-up";
 import { UpdateToDeliveredUseCase } from "@src/application/use-cases/update-package-to-delivered";
@@ -28,6 +29,7 @@ import { UpdatePackageController } from "../controllers/update-package.controlle
 		UpdateToReturnedUseCase,
 		GetPackageByIdUseCase,
 		DeletePackageUseCase,
+		GetAllPackagesUseCase,
 	],
 	exports: [DatabaseModule],
 })

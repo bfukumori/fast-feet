@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { GetUserDto } from "@src/application/dtos/get-user.dto";
+import { PaginationQueryDto } from "@src/application/dtos/pagination-query.dto";
 import { User } from "@src/domain/entities/user";
 import { UserRepository } from "@src/domain/repositories/user-repository";
 import {
@@ -10,6 +12,32 @@ import { PrismaService } from "@src/shared/database/prisma/prisma.service";
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
 	constructor(private readonly prisma: PrismaService) {}
+
+	async getAll(params?: PaginationQueryDto): Promise<{
+		users: GetUserDto[];
+		totalCount: number;
+		totalPages: number;
+		currentPage: number;
+	}> {
+		const { limit, page } = params || { limit: 10, page: 1 };
+		const skip = (page - 1) * limit;
+
+		const [users, totalCount] = await Promise.all([
+			this.prisma.user.findMany({
+				skip,
+				take: limit,
+				orderBy: { name: "asc" },
+			}),
+			this.prisma.user.count(),
+		]);
+
+		return {
+			users,
+			totalCount,
+			totalPages: Math.ceil(totalCount / limit),
+			currentPage: page,
+		};
+	}
 
 	async getUserById(id: string): Promise<User | null> {
 		const user = await this.prisma.user.findUnique({

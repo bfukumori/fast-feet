@@ -6,9 +6,10 @@ import { Test } from "@nestjs/testing";
 import { AppModule } from "@src/app.module";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
-import { UserFactory } from "@test/factories/make-user-factory";
+import { UserFactory, makeUser } from "@test/factories/make-user-factory";
 import { Role } from "generated/prisma";
 import request from "supertest";
+import { toPersistence } from "../mappers/prisma-user-mapper";
 
 describe("Get user [e2e]", () => {
 	let app: INestApplication;
@@ -34,6 +35,26 @@ describe("Get user [e2e]", () => {
 
 	beforeEach(async () => {
 		await prismaService.user.deleteMany();
+	});
+
+	test("[GET] List users", async () => {
+		const user1 = makeUser({ cpf: "63849758079" });
+		const user2 = makeUser({ cpf: "54603220065" });
+		await prismaService.user.createMany({
+			data: [toPersistence(user1), toPersistence(user2)],
+		});
+
+		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
+
+		const response = await request(app.getHttpServer())
+			.get("/api/users")
+			.set("Authorization", `Bearer ${accessToken}`);
+
+		expect(response.statusCode).toBe(HttpStatus.OK);
+
+		const usersOnDatabase = await prismaService.user.findMany();
+
+		expect(usersOnDatabase).toHaveLength(2);
 	});
 
 	test("[GET] Get user by its id", async () => {
@@ -62,7 +83,7 @@ describe("Get user [e2e]", () => {
 		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
 
 		const response = await request(app.getHttpServer())
-			.get(`/api/users?cpf=${user.cpf.value}`)
+			.get(`/api/users/search-by-cpf?cpf=${user.cpf.value}`)
 			.set("Authorization", `Bearer ${accessToken}`);
 
 		expect(response.statusCode).toBe(HttpStatus.OK);
@@ -101,7 +122,7 @@ describe("Get user [e2e]", () => {
 		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
 
 		const response = await request(app.getHttpServer())
-			.get(`/api/users?cpf=${invalidUserCpf}`)
+			.get(`/api/users/search-by-cpf?cpf=${invalidUserCpf}`)
 			.set("Authorization", `Bearer ${accessToken}`);
 
 		const userOnDatabase = await prismaService.user.findFirst({

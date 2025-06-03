@@ -1,7 +1,7 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export const getRecipientSchema = z.object({
+export const recipientSchema = z.object({
 	id: z.string().uuid(),
 	name: z.string(),
 	street: z.string(),
@@ -12,4 +12,4 @@ export const getRecipientSchema = z.object({
 	zipCode: z.string(),
 });
 
-export class GetRecipientDto extends createZodDto(getRecipientSchema) {}
+export class GetRecipientDto extends createZodDto(recipientSchema) {}

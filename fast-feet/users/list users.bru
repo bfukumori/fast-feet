@@ -1,17 +1,13 @@
 meta {
-  name: get user by cpf
+  name: list users
   type: http
-  seq: 4
+  seq: 6
 }
 
 get {
-  url: {{baseUrl}}/users/search-by-cpf?cpf=68720915098
+  url: {{baseUrl}}/users
   body: none
   auth: inherit
-}
-
-params:query {
-  cpf: 68720915098
 }
 
 body:json {

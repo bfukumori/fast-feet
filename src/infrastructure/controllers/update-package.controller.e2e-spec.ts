@@ -39,6 +39,14 @@ describe("Update package [e2e]", () => {
 		await app.listen(0);
 	});
 
+	beforeEach(async () => {
+		await Promise.all([
+			prismaService.user.deleteMany(),
+			prismaService.recipient.deleteMany(),
+			prismaService.package.deleteMany(),
+		]);
+	});
+
 	test("[PATCH] Update package to awaiting", async () => {
 		const recipient = await recipientFactory.makePrismaRecipient();
 
@@ -75,6 +83,8 @@ describe("Update package [e2e]", () => {
 	});
 
 	test("[PUT] Update package to delivered", async () => {
+		const user = await userFactory.makePrismaUser();
+
 		const recipient = await recipientFactory.makePrismaRecipient();
 
 		const createPackageDto: CreatePackageDto = {
@@ -85,9 +95,13 @@ describe("Update package [e2e]", () => {
 		const pack = await packageFactory.makePrismaPackage({
 			...createPackageDto,
 			status: PackageStatus.PICKED_UP,
+			deliveryManId: user.id.value,
 		});
 
-		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
+		const accessToken = jwtService.sign({
+			sub: user.id.value,
+			role: Role.ADMIN,
+		});
 
 		const response = await request(app.getHttpServer())
 			.put(`/api/packages/${pack.id.value}/to-delivered`)

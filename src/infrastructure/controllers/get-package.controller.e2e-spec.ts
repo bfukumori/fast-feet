@@ -8,10 +8,18 @@ import { AppModule } from "@src/app.module";
 import { CreatePackageDto } from "@src/application/dtos/create-package.dto";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
-import { PackageFactory } from "@test/factories/make-package-factory";
-import { RecipientFactory } from "@test/factories/make-recipient-factory";
+import {
+	PackageFactory,
+	makePackage,
+} from "@test/factories/make-package-factory";
+import {
+	RecipientFactory,
+	makeRecipient,
+} from "@test/factories/make-recipient-factory";
 import { Role } from "generated/prisma";
 import request from "supertest";
+import { toPersistence as packageToPersistence } from "../mappers/prisma-package-mapper";
+import { toPersistence as recipientToPersistence } from "../mappers/prisma-recipient-mapper";
 
 describe("Get package [e2e]", () => {
 	let app: INestApplication;
@@ -38,7 +46,39 @@ describe("Get package [e2e]", () => {
 	});
 
 	beforeEach(async () => {
-		await prismaService.package.deleteMany();
+		await Promise.all([
+			prismaService.recipient.deleteMany(),
+			prismaService.package.deleteMany(),
+		]);
+	});
+
+	test("[GET] List packages", async () => {
+		const recipient1 = makeRecipient();
+		const recipient2 = makeRecipient();
+		await prismaService.recipient.createMany({
+			data: [
+				recipientToPersistence(recipient1),
+				recipientToPersistence(recipient2),
+			],
+		});
+
+		const package1 = makePackage({ recipientId: recipient1.id.value });
+		const package2 = makePackage({ recipientId: recipient2.id.value });
+		await prismaService.package.createMany({
+			data: [packageToPersistence(package1), packageToPersistence(package2)],
+		});
+
+		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
+
+		const response = await request(app.getHttpServer())
+			.get("/api/packages")
+			.set("Authorization", `Bearer ${accessToken}`);
+
+		expect(response.statusCode).toBe(HttpStatus.OK);
+
+		const packagesOnDatabase = await prismaService.package.findMany();
+
+		expect(packagesOnDatabase).toHaveLength(2);
 	});
 
 	test("[GET] Get package by its id", async () => {

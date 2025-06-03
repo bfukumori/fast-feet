@@ -6,9 +6,13 @@ import { Test } from "@nestjs/testing";
 import { AppModule } from "@src/app.module";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
-import { RecipientFactory } from "@test/factories/make-recipient-factory";
+import {
+	RecipientFactory,
+	makeRecipient,
+} from "@test/factories/make-recipient-factory";
 import { Role } from "generated/prisma";
 import request from "supertest";
+import { toPersistence } from "../mappers/prisma-recipient-mapper";
 
 describe("Get recipient [e2e]", () => {
 	let app: INestApplication;
@@ -34,6 +38,26 @@ describe("Get recipient [e2e]", () => {
 
 	beforeEach(async () => {
 		await prismaService.recipient.deleteMany();
+	});
+
+	test("[GET] List recipients", async () => {
+		const recipient1 = makeRecipient();
+		const recipient2 = makeRecipient();
+		await prismaService.recipient.createMany({
+			data: [toPersistence(recipient1), toPersistence(recipient2)],
+		});
+
+		const accessToken = jwtService.sign({ sub: "", role: Role.ADMIN });
+
+		const response = await request(app.getHttpServer())
+			.get("/api/recipients")
+			.set("Authorization", `Bearer ${accessToken}`);
+
+		expect(response.statusCode).toBe(HttpStatus.OK);
+
+		const recipientsOnDatabase = await prismaService.recipient.findMany();
+
+		expect(recipientsOnDatabase).toHaveLength(2);
 	});
 
 	test("[GET] Get recipient by its id", async () => {

@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { CreateUserUseCase } from "@src/application/use-cases/create-user";
 import { DeleteUserUseCase } from "@src/application/use-cases/delete-user";
+import { GetAllUsersUseCase } from "@src/application/use-cases/get-all-users";
 import { GetUserByCpfUseCase } from "@src/application/use-cases/get-user-by-cpf";
 import { GetUserByIdUseCase } from "@src/application/use-cases/get-user-by-id";
 import { UpdateUserUseCase } from "@src/application/use-cases/update-user";
@@ -25,6 +26,7 @@ import { CryptographyModule } from "./cryptography.module";
 		DeleteUserUseCase,
 		GetUserByIdUseCase,
 		GetUserByCpfUseCase,
+		GetAllUsersUseCase,
 	],
 	exports: [DatabaseModule, CryptographyModule],
 })

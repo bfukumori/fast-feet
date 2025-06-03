@@ -32,6 +32,10 @@ describe("Update recipient [e2e]", () => {
 		await app.listen(0);
 	});
 
+	beforeEach(async () => {
+		await prismaService.recipient.deleteMany();
+	});
+
 	test("[PUT] Update recipient complement to null if empty", async () => {
 		const recipient = await recipientFactory.makePrismaRecipient({
 			complement: undefined,

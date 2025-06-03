@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { GetRecipientDto } from "@src/application/dtos/get-recipient.dto";
+import { PaginationQueryDto } from "@src/application/dtos/pagination-query.dto";
 import { Recipient } from "@src/domain/entities/recipient";
 import { RecipientRepository } from "@src/domain/repositories/recipient-repository";
 import {
@@ -10,6 +12,32 @@ import { PrismaService } from "@src/shared/database/prisma/prisma.service";
 @Injectable()
 export class PrismaRecipientRepository implements RecipientRepository {
 	constructor(private readonly prisma: PrismaService) {}
+
+	async getAll(params?: PaginationQueryDto): Promise<{
+		recipients: GetRecipientDto[];
+		totalCount: number;
+		totalPages: number;
+		currentPage: number;
+	}> {
+		const { limit, page } = params || { limit: 10, page: 1 };
+		const skip = (page - 1) * limit;
+
+		const [recipients, totalCount] = await Promise.all([
+			this.prisma.recipient.findMany({
+				skip,
+				take: limit,
+				orderBy: { name: "asc" },
+			}),
+			this.prisma.recipient.count(),
+		]);
+
+		return {
+			recipients,
+			totalCount,
+			totalPages: Math.ceil(totalCount / limit),
+			currentPage: page,
+		};
+	}
 
 	async getRecipientById(id: string): Promise<Recipient | null> {
 		const pack = await this.prisma.recipient.findUnique({
