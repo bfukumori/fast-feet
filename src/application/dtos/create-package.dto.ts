@@ -2,7 +2,7 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
 export const createPackageSchema = z.object({
-	recipientId: z.string().uuid(),
+	recipientId: z.uuid(),
 	description: z.string(),
 });
 

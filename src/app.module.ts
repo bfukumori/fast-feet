@@ -45,4 +45,3 @@ import { envSchema } from "./shared/config/env/env.schema";
 	],
 })
 export class AppModule {}
-("");

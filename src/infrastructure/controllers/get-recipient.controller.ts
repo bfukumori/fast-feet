@@ -1,6 +1,5 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
-import { GetAllRecipientsDto } from "@src/application/dtos/get-all-recipíents.dto";
 import { GetRecipientDto } from "@src/application/dtos/get-recipient.dto";
 import { IdQueryDto } from "@src/application/dtos/id-query.dto";
 import { PaginationQueryDto } from "@src/application/dtos/pagination-query.dto";
@@ -9,6 +8,7 @@ import { GetRecipientByIdUseCase } from "@src/application/use-cases/get-recipien
 import { Role } from "generated/prisma";
 import { ZodSerializerDto } from "nestjs-zod";
 import { Roles } from "../decorators/roles.decorator";
+import { GetAllRecipientsDto } from "@src/application/dtos/get-all-recipients.dto";
 
 @Roles(Role.ADMIN)
 @Controller("recipients")

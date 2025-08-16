@@ -1,3 +1,6 @@
+// biome-ignore assist/source/organizeImports: false
+import { initializeTracing } from "./tracing";
+initializeTracing();
 import { NestFactory } from "@nestjs/core";
 import {
 	FastifyAdapter,

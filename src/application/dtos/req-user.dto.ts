@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export const reqUserSchema = z.object({
 	user: z.object({
-		sub: z.string().uuid(),
-		role: z.nativeEnum(Role),
+		sub: z.uuid(),
+		role: z.enum(Role),
 		iat: z.number(),
 		exp: z.number(),
 	}),

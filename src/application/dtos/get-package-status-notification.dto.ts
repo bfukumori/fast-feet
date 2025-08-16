@@ -3,9 +3,9 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
 export const packageStatusNotificationSchema = z.object({
-	id: z.string().uuid(),
-	packageId: z.string().uuid(),
-	status: z.nativeEnum(PackageStatus),
+	id: z.uuid(),
+	packageId: z.uuid(),
+	status: z.enum(PackageStatus),
 	notifiedAt: z.string(),
 });
 
