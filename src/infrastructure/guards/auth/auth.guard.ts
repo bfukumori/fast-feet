@@ -46,7 +46,7 @@ export class AuthGuard implements CanActivate {
 			});
 
 			req.user = payload;
-		} catch (error) {
+		} catch (_error) {
 			throw new ApplicationError(
 				"Not authenticated.",
 				AuthGuard.name,

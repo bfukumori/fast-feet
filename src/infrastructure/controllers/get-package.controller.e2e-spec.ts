@@ -9,12 +9,12 @@ import { CreatePackageDto } from "@src/application/dtos/create-package.dto";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
 import {
-	PackageFactory,
 	makePackage,
+	PackageFactory,
 } from "@test/factories/make-package-factory";
 import {
-	RecipientFactory,
 	makeRecipient,
+	RecipientFactory,
 } from "@test/factories/make-recipient-factory";
 import { Role } from "generated/prisma";
 import request from "supertest";

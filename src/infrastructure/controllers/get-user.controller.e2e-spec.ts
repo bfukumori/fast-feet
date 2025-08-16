@@ -6,7 +6,7 @@ import { Test } from "@nestjs/testing";
 import { AppModule } from "@src/app.module";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
-import { UserFactory, makeUser } from "@test/factories/make-user-factory";
+import { makeUser, UserFactory } from "@test/factories/make-user-factory";
 import { Role } from "generated/prisma";
 import request from "supertest";
 import { toPersistence } from "../mappers/prisma-user-mapper";

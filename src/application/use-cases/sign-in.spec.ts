@@ -1,14 +1,9 @@
 import { HttpStatus } from "@nestjs/common";
-import { User } from "@src/domain/entities/user";
-import { toPersistence } from "@src/infrastructure/mappers/prisma-user-mapper";
+import { JwtService } from "@nestjs/jwt";
 import { ApplicationError } from "@src/shared/errors/application-error";
-import { DomainError } from "@src/shared/errors/domain-error";
 import { FakeHasher } from "@test/cryptography/fake-hasher";
 import { makeUser } from "@test/factories/make-user-factory";
 import { InMemoryUserRepository } from "@test/repositories/in-memory-user-repository";
-import { Role } from "generated/prisma";
-
-import { JwtService } from "@nestjs/jwt";
 import { SignInDto } from "../dtos/sign-in.dto";
 import { SignInUseCase } from "./sign-in";
 

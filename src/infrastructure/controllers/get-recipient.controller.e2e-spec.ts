@@ -7,8 +7,8 @@ import { AppModule } from "@src/app.module";
 import { DatabaseModule } from "@src/shared/database/database.module";
 import { PrismaService } from "@src/shared/database/prisma/prisma.service";
 import {
-	RecipientFactory,
 	makeRecipient,
+	RecipientFactory,
 } from "@test/factories/make-recipient-factory";
 import { Role } from "generated/prisma";
 import request from "supertest";
