@@ -3,10 +3,10 @@ meta {
   seq: 1
 }
 
-headers {
-  Authorization: Bearer {{accessToken}}
+auth {
+  mode: bearer
 }
 
-auth {
-  mode: none
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiX3ZhbHVlIjoiY2FjNjcyMDQtZWU5My00OWFmLWFjM2ItODc2MTliZDc4YWZkIn0sInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1NzgwNjEzOSwiZXhwIjoxNzU3ODkyNTM5fQ.MxCh2P-YXDEICVApFRo6FolmCSzR1g3RgoCYphtCPF0
 }

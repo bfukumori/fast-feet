@@ -7,7 +7,6 @@ import {
 	NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { patchNestJsSwagger } from "nestjs-zod";
 import { AppModule } from "./app.module";
 import { EnvService } from "./shared/config/env/env.service";
 import { ApplicationExceptionFilter } from "./shared/filters/application-exception.filter";
@@ -24,8 +23,6 @@ async function bootstrap() {
 		new ApplicationExceptionFilter(),
 		new DomainExceptionFilter(),
 	);
-
-	patchNestJsSwagger();
 
 	const config = new DocumentBuilder()
 		.setTitle("FastFeet API")
