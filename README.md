@@ -1,6 +1,6 @@
 # 🚚 FastFeet API
 
-API REST para controle de encomendas de uma transportadora fictícia, desenvolvida com Node.js, Prisma e PostgreSQL. A aplicação permite gerenciar entregadores, destinatários e encomendas, além de rastrear status e enviar notificações.
+API REST para o controle de encomendas de uma transportadora fictícia, desenvolvida com Node.js, Prisma e PostgreSQL. A aplicação permite gerenciar entregadores, destinatários e encomendas, além de rastrear status e enviar notificações.
 
 ---
 
